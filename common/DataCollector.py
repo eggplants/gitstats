@@ -165,6 +165,19 @@ class DataCollector:
         os.rename(tempfile, cachefile)
 
     def dumpJson(self):
+        authorInfo = {}
+
+        for name, active in self.authors.items():
+            tmp = {}
+            for k, v in active.items():
+                if isinstance(v, set):
+                    tmp[k] = list(v)
+                elif isinstance(v, datetime.timedelta):
+                    tmp[k] = str(v)
+                else:
+                    tmp[k] = v
+            authorInfo[name] = tmp
+
         data = {
             'stamp_created': self.stamp_created,
             'total_authors': self.total_authors,
@@ -177,7 +190,7 @@ class DataCollector:
             'activity_by_hour_of_week_busiest':
             self.activity_by_hour_of_week_busiest,
             'activity_by_year_week': self.activity_by_year_week,
-            # 'authors': self.authors,
+            'authors': authorInfo,
             'total_commits': self.total_commits,
             'total_files': self.total_files,
             'authors_by_commits': self.authors_by_commits,
@@ -193,7 +206,7 @@ class DataCollector:
             'first_commit_stamp': self.first_commit_stamp,
             'last_commit_stamp': self.last_commit_stamp,
             'last_active_day': self.last_active_day,
-            # 'active_days': self.active_days,
+            'active_days': list(self.active_days),
             'total_lines': self.total_lines,
             'total_lines_added': self.total_lines_added,
             'total_lines_removed': self.total_lines_removed,
@@ -205,6 +218,4 @@ class DataCollector:
             'changes_by_date': self.changes_by_date,
         }
         
-        print(self.authors)
-
         return json.dumps(data, indent=4)
