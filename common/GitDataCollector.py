@@ -1,10 +1,12 @@
 import datetime
 import re
 import os
+import json
+
 from multiprocessing import Pool
 from .DataCollector import DataCollector
-from .utils import getpipeoutput, getlogrange, getnumoffilesfromrev, getcommitrange
-from .utils import getnumoflinesinblob, getstatsummarycounts, getkeyssortedbyvaluekey
+from .utils import (getpipeoutput, getlogrange, getnumoffilesfromrev, getcommitrange, 
+getnumoflinesinblob, getstatsummarycounts, getkeyssortedbyvaluekey)
 from .constans import conf
 
 
@@ -525,3 +527,62 @@ class GitDataCollector(DataCollector):
         stamp = int(
             getpipeoutput(['git log --pretty=format:%%at "%s" -n 1' % rev]))
         return datetime.datetime.fromtimestamp(stamp).strftime("%Y-%m-%d")
+
+    def dumpJson(self):
+        authorInfo = {}
+
+        for name, active in self.authors.items():
+            tmp = {}
+            for k, v in active.items():
+                if isinstance(v, set):
+                    tmp[k] = list(v)
+                elif isinstance(v, datetime.timedelta):
+                    tmp[k] = str(v)
+                else:
+                    tmp[k] = v
+            authorInfo[name] = tmp
+
+        print(self.authors_by_commits)
+        
+        data = {
+            'stamp_created': self.stamp_created,
+            'total_authors': self.total_authors,
+            'activity_by_hour_of_day': self.activity_by_hour_of_day,
+            'activity_by_day_of_week': self.activity_by_day_of_week,
+            'activity_by_month_of_year': self.activity_by_month_of_year,
+            'activity_by_hour_of_week': self.activity_by_hour_of_week,
+            'activity_by_hour_of_day_busiest':
+            self.activity_by_hour_of_day_busiest,
+            'activity_by_hour_of_week_busiest':
+            self.activity_by_hour_of_week_busiest,
+            'activity_by_year_week': self.activity_by_year_week,
+            'authors': authorInfo,
+            'total_commits': self.total_commits,
+            'total_files': self.total_files,
+            'authors_by_commits': self.authors_by_commits,
+            'domains': self.domains,
+            'author_of_month': self.author_of_month,
+            'author_of_year': self.author_of_year,
+            'commits_by_month': self.commits_by_month,
+            'commits_by_year': self.commits_by_year,
+            'lines_added_by_month': self.lines_added_by_month,
+            'lines_added_by_year': self.lines_added_by_year,
+            'lines_removed_by_month': self.lines_removed_by_month,
+            'lines_removed_by_year': self.lines_removed_by_year,
+            'first_commit_stamp': self.first_commit_stamp,
+            'last_commit_stamp': self.last_commit_stamp,
+            'last_active_day': self.last_active_day,
+            'active_days': list(self.active_days),
+            'total_lines': self.total_lines,
+            'total_lines_added': self.total_lines_added,
+            'total_lines_removed': self.total_lines_removed,
+            'total_size': self.total_size,
+            'commits_by_timezone': self.commits_by_timezone,
+            'tags': self.tags,
+            'files_by_stamp': self.files_by_stamp,
+            'extensions': self.extensions,
+            'changes_by_date': self.changes_by_date,
+            'changes_by_date_by_author': self.changes_by_date_by_author
+        }
+        
+        return json.dumps(data, indent=4)
