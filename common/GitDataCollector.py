@@ -7,16 +7,18 @@ from multiprocessing import Pool
 from .DataCollector import DataCollector
 from .utils import (getpipeoutput, getlogrange, getnumoffilesfromrev, getcommitrange, 
 getnumoflinesinblob, getstatsummarycounts, getkeyssortedbyvaluekey)
-from .constans import conf
+from .constans import FIND_CMD, GREP_CMD, conf
 
 
 class GitDataCollector(DataCollector):
     def collect(self, dir):
         DataCollector.collect(self, dir)
 
+        
+
         self.total_authors += int(
-            getpipeoutput(["git shortlog -s %s" % getlogrange(), "wc -l"]))
-        # self.total_lines = int(getoutput('git-ls-files -z |xargs -0 cat |wc -l'))
+            getpipeoutput(["git shortlog -s %s" % getlogrange(), FIND_CMD]))
+        # self.total_lines = int(getoutput('git-ls-files -z |xargs -0 cat |find /c /v \"\"'))
 
         # tags
         lines = getpipeoutput(["git show-ref --tags"]).split("\n")
@@ -77,7 +79,7 @@ class GitDataCollector(DataCollector):
         lines = getpipeoutput([
             'git rev-list --pretty=format:"%%at %%ai %%aN <%%aE>" %s' %
             getlogrange("HEAD"),
-            "grep -v ^commit",
+            GREP_CMD + " -v ^commit",
         ]).split("\n")
         for line in lines:
             parts = line.split(" ", 4)
@@ -203,7 +205,7 @@ class GitDataCollector(DataCollector):
         # outputs "<stamp> <files>" for each revision
         revlines = (getpipeoutput([
             'git rev-list --pretty=format:"%%at %%T" %s' % getlogrange("HEAD"),
-            "grep -v ^commit",
+            GREP_CMD + " -v ^commit",
         ]).strip().split("\n"))
         lines = []
         revs_to_read = []

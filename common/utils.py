@@ -4,7 +4,7 @@ import subprocess
 import os
 import re
 from typing import Iterator
-from common.constans import ON_LINUX, conf
+from common.constans import FIND_CMD, ON_LINUX, conf
 
 
 def getpipeoutput(cmds, quiet=False):
@@ -104,7 +104,7 @@ def getnumoffilesfromrev(time_rev):
         rev,
         int(
             getpipeoutput(['git ls-tree -r --name-only "%s"' % rev,
-                           "wc -l"]).split("\n")[0]),
+                           FIND_CMD]).split("\n")[0]),
     )
 
 
@@ -118,7 +118,7 @@ def getnumoflinesinblob(ext_blob):
         blob_id,
         int(
             getpipeoutput(["git cat-file blob %s" % blob_id,
-                           "wc -l"]).split()[0]),
+                           FIND_CMD]).split()[0]),
     )
 
 
