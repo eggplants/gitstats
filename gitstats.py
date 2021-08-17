@@ -2,7 +2,6 @@ import sys
 import os
 import time
 import getopt
-import json
 
 from common.GitDataCollector import GitDataCollector
 from common.utils import usage
@@ -72,7 +71,7 @@ if __name__ == "__main__":
     data.saveCache(cachefile)
     data.refine()
     
-    with open(os.path.join(outputpath, 'data.json'), 'w') as f:
+    with open(os.path.join(outputpath, 'report.json'), 'w') as f:
         f.write(data.dumpJson())
     
     time_end = time.time()
