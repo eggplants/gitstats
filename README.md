@@ -1,6 +1,7 @@
 # gitstats for python 3
 
-Fork from <https://github.com/hoxu/gitstats> for support python 3
+- Git history statistics generator
+- Forked from [hoxu/gitstats](https://github.com/hoxu/gitstats) for support python3
 
 ## Install
 
