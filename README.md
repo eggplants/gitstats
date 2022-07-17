@@ -1,5 +1,23 @@
 # gitstats for python 3
 
+[![PyPI](
+  https://img.shields.io/pypi/v/gitstats-forked?color=blue
+  )](
+  https://pypi.org/project/gitstats-forked/
+) [![ghcr](
+  https://ghcr-badge.herokuapp.com/eggplants/gitstats/size
+  )](
+  https://github.com/eggplants/gitstats/pkgs/container/gitstats
+) [![Maintainability](
+  https://api.codeclimate.com/v1/badges/845cc591d0e88120e394/maintainability
+  )](
+  https://codeclimate.com/github/eggplants/gitstats/maintainability
+) [![pre-commit.ci status](
+  https://results.pre-commit.ci/badge/github/eggplants/gitstats/master.svg
+  )](
+  https://results.pre-commit.ci/latest/github/eggplants/gitstats/master
+)
+
 - Git history statistics generator
 - Forked from [KaivnD/gitstats](https://github.com/KaivnD/gitstats) for support python3
 
